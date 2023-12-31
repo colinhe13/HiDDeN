@@ -1,0 +1,4 @@
+训练参数
+batch_size=48, number_of_epochs=400, train_folder=/data/coco/10K/train, validation_folder=/data/coco/10K/val, runs_folder=./runs, start_epoch=1
+[{'type': 'crop', 'height_ratios': (0.2, 0.25), 'width_ratios': (0.2, 0.25)}]
+H=128, W=128, message_length=30, encoder_blocks=4, encoder_channels=64, use_discriminator=True, use_vgg=False, decoder_blocks=7, decoder_channels=64, discriminator_blocks=3, discriminator_channels=64, decoder_loss=1, encoder_loss=0.7, adversarial_loss=0.001

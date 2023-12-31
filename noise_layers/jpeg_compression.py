@@ -81,20 +81,25 @@ class JpegCompression(nn.Module):
         self.create_mask((1000, 1000))
 
 
+    # 创建一个新的大掩码，我们可以通过对较小的图像进行切片来使用它
     def create_mask(self, requested_shape):
+        # 如果当前的JPEG掩码为空，或者请求的形状大于当前掩码的形状，则创建一个新的JPEG掩码
         if self.jpeg_mask is None or requested_shape > self.jpeg_mask.shape[1:]:
+            # 创建一个新的JPEG掩码，形状为(3, requested_shape[0], requested_shape[1])
             self.jpeg_mask = torch.empty((3,) + requested_shape, device=self.device)
+            # 获取每个通道的掩码
             for channel, weights_to_keep in enumerate(self.yuv_keep_weighs):
                 mask = torch.from_numpy(get_jpeg_yuv_filter_mask(requested_shape, 8, weights_to_keep))
                 self.jpeg_mask[channel] = mask
 
+    # 获取正确大小的JPEG掩码切片
     def get_mask(self, image_shape):
         if self.jpeg_mask.shape < image_shape:
             self.create_mask(image_shape)
         # return the correct slice of it
         return self.jpeg_mask[:, :image_shape[1], :image_shape[2]].clone()
 
-
+    # 应用DCT或IDCT滤波器，模拟JPEG压缩
     def apply_conv(self, image, filter_type: str):
 
         if filter_type == 'dct':
@@ -124,37 +129,47 @@ class JpegCompression(nn.Module):
 
         return image_conv_stacked
 
-
+    # 前向传播
     def forward(self, noised_and_cover):
 
+        # 获取噪声图像
         noised_image = noised_and_cover[0]
+
         # pad the image so that we can do dct on 8x8 blocks
+        # 填充图像，以便我们可以在8x8块上进行dct
         pad_height = (8 - noised_image.shape[2] % 8) % 8
         pad_width = (8 - noised_image.shape[3] % 8) % 8
-
         noised_image = nn.ZeroPad2d((0, pad_width, 0, pad_height))(noised_image)
 
         # convert to yuv
+        # 转换为yuv颜色空间
         image_yuv = torch.empty_like(noised_image)
         rgb2yuv(noised_image, image_yuv)
 
+        # 断言 yuv 图像的高度和宽度都是8的倍数
         assert image_yuv.shape[2] % 8 == 0
         assert image_yuv.shape[3] % 8 == 0
 
         # apply dct
+        # 对YUV图像应用DCT操作
         image_dct = self.apply_conv(image_yuv, 'dct')
         # get the jpeg-compression mask
+        # 获取JPEG掩码
         mask = self.get_mask(image_dct.shape[1:])
         # multiply the dct-ed image with the mask.
+        # 将DCT后的图像和JPEG掩码相乘
         image_dct_mask = torch.mul(image_dct, mask)
 
         # apply inverse dct (idct)
+        # 对DCT后的图像应用IDCT操作，IDCT是DCT的逆运算
         image_idct = self.apply_conv(image_dct_mask, 'idct')
         # transform from yuv to to rgb
+        # 从yuv颜色空间转换为rgb颜色空间
         image_ret_padded = torch.empty_like(image_dct)
         yuv2rgb(image_idct, image_ret_padded)
 
         # un-pad
+        # 去除填充，并更新输入中的噪声处理后的图像
         noised_and_cover[0] = image_ret_padded[:, :, :image_ret_padded.shape[2]-pad_height, :image_ret_padded.shape[3]-pad_width].clone()
 
         return noised_and_cover

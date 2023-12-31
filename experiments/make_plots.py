@@ -89,7 +89,8 @@ import os
 
 extension = 'svg'
 
-data = pd.read_csv('validation.csv')
+# data = pd.read_csv('validation.csv')
+data = pd.read_csv('no-noise adam-eps-1e-4/validation.csv')
 num_epochs = max(data['epoch'])
 
 metrics = [('Bitwise Error of the Decoder', 'Bitwise error', 'bitwise-error'),

@@ -1,3 +1,4 @@
+# 定义了一些配置类，用于配置训练过程中的参数
 class TrainingOptions:
     """
     Configuration options for the training
@@ -16,6 +17,11 @@ class TrainingOptions:
         self.start_epoch = start_epoch
         self.experiment_name = experiment_name
 
+    def __str__(self):
+        return f'batch_size={self.batch_size}, number_of_epochs={self.number_of_epochs}, ' \
+               f'train_folder={self.train_folder}, validation_folder={self.validation_folder}, ' \
+               f'runs_folder={self.runs_folder}, start_epoch={self.start_epoch}'
+               # f'runs_folder={self.runs_folder}, start_epoch={self.start_epoch}, experiment_name={self.experiment_name}'
 
 class HiDDenConfiguration():
     """
@@ -47,3 +53,13 @@ class HiDDenConfiguration():
         self.encoder_loss = encoder_loss
         self.adversarial_loss = adversarial_loss
         self.enable_fp16 = enable_fp16
+
+    def __str__(self):
+        return f'H={self.H}, W={self.W}, message_length={self.message_length}, ' \
+               f'encoder_blocks={self.encoder_blocks}, encoder_channels={self.encoder_channels}, ' \
+               f'use_discriminator={self.use_discriminator}, use_vgg={self.use_vgg}, ' \
+               f'decoder_blocks={self.decoder_blocks}, decoder_channels={self.decoder_channels}, ' \
+               f'discriminator_blocks={self.discriminator_blocks}, discriminator_channels={self.discriminator_channels}, ' \
+               f'decoder_loss={self.decoder_loss}, encoder_loss={self.encoder_loss}, ' \
+               f'adversarial_loss={self.adversarial_loss}'
+               # f'adversarial_loss={self.adversarial_loss}, enable_fp16={self.enable_fp16}'
