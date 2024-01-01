@@ -78,7 +78,6 @@ class Hidden:
             # train on cover
             # ground truth 创建用于判别器训练的目标标签，表示真实图像（一个batch_size*1的张量，每个元素的值都是1）
             d_target_label_cover = torch.full((batch_size, 1), self.cover_label, device=self.device)
-            d_target_label_cover = d_target_label_cover.float()
             # 创建用于判别器训练的目标标签，表示编码后的图像（一个batch_size*1的张量，每个元素的值都是0）
             d_target_label_encoded = torch.full((batch_size, 1), self.encoded_label, device=self.device)
             # 创建用于生成器（编码器-解码器）训练的目标标签，表示编码后的图像（一个batch_size*1的张量，每个元素的值都是1）
@@ -87,6 +86,7 @@ class Hidden:
             # 判别器对真实图像进行前向传播
             d_on_cover = self.discriminator(images)
             # 计算判别器对真实图像的二进制交叉熵损失
+            d_target_label_cover = d_target_label_cover.float()
             d_loss_on_cover = self.bce_with_logits_loss(d_on_cover, d_target_label_cover)
             # 反向传播并计算判别器对真实图像的梯度
             d_loss_on_cover.backward()
@@ -97,6 +97,7 @@ class Hidden:
             # 判别器对编码后的图像进行前向传播，使用.detach()防止梯度传播到编码器-解码器
             d_on_encoded = self.discriminator(encoded_images.detach())
             # 计算判别器对编码后的图像的二进制交叉熵损失
+            d_target_label_encoded = d_target_label_encoded.float()
             d_loss_on_encoded = self.bce_with_logits_loss(d_on_encoded, d_target_label_encoded)
 
             # 反向传播并计算判别器对编码后的图像的梯度
@@ -111,6 +112,7 @@ class Hidden:
             # 判别器对编码后的图像进行前向传播，用于生成器的训练
             d_on_encoded_for_enc = self.discriminator(encoded_images)
             # 计算生成器对判别器的对抗损失
+            g_target_label_encoded = g_target_label_encoded.float()
             g_loss_adv = self.bce_with_logits_loss(d_on_encoded_for_enc, g_target_label_encoded)
 
             # 如果没有VGG损失
@@ -193,6 +195,7 @@ class Hidden:
             # 判别器对真实图像进行前向传播
             d_on_cover = self.discriminator(images)
             # 计算判别器对真实图像的二进制交叉熵损失
+            d_target_label_cover = d_target_label_cover.float()
             d_loss_on_cover = self.bce_with_logits_loss(d_on_cover, d_target_label_cover)
 
             # 编码器-解码器对图像和消息进行前向传播，生成编码后的图像、加噪图像和解码后的消息
@@ -201,11 +204,13 @@ class Hidden:
             # 判别器对编码后的图像进行前向传播，使用.detach()防止梯度传播到编码器-解码器
             d_on_encoded = self.discriminator(encoded_images)
             # 计算判别器对编码后的图像的二进制交叉熵损失
+            d_target_label_encoded = d_target_label_encoded.float()
             d_loss_on_encoded = self.bce_with_logits_loss(d_on_encoded, d_target_label_encoded)
 
             # 判别器对编码后的图像进行前向传播，用于生成器的训练
             d_on_encoded_for_enc = self.discriminator(encoded_images)
             # 计算生成器对判别器的对抗损失
+            g_target_label_encoded = g_target_label_encoded.float()
             g_loss_adv = self.bce_with_logits_loss(d_on_encoded_for_enc, g_target_label_encoded)
 
             # 如果没有VGG损失

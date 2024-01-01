@@ -178,7 +178,8 @@ if __name__ == '__main__':
 
     # device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
     # hidden_config = HiDDenConfiguration(H=512, W=512,
-    #                                     message_length=52428,
+    #                                     # message_length=52428,
+    #                                     message_length=2428,
     #                                     encoder_blocks=4, encoder_channels=64,
     #                                     decoder_blocks=7, decoder_channels=64,
     #                                     use_discriminator=True,
@@ -193,7 +194,8 @@ if __name__ == '__main__':
     # tb_logger = None
     # model = Hidden(hidden_config, device, noiser, tb_logger)
     # train_options = TrainingOptions(
-    #     batch_size=12,
+    #     # batch_size=12,
+    #     batch_size=2,
     #     number_of_epochs=100,
     #     train_folder=os.path.join('data', 'boss_h', 'data_size512', '500_50', 'train'),
     #     validation_folder=os.path.join('data', 'boss_h', 'data_size512', '500_50', 'val'),
