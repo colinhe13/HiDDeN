@@ -42,7 +42,7 @@ class MotionBlur(nn.Module):
         # Generate random blur size and angle
         blur_size = torch.randint(self.blur_range[0], self.blur_range[1] + 1, (1,)).item()
         blur_angle = torch.randint(self.angle_range[0], self.angle_range[1] + 1, (1,)).item()
-        print(blur_size, blur_angle)
+        # print(blur_size, blur_angle)
 
         # Create a motion blur kernel
         kernel = self._motion_blur_kernel(blur_size, blur_angle)
