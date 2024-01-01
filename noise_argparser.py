@@ -2,8 +2,10 @@ import argparse
 import re
 from noise_layers.cropout import Cropout
 from noise_layers.crop import Crop
+from noise_layers.defocus_blur import DefocusBlur
 from noise_layers.identity import Identity
 from noise_layers.dropout import Dropout
+from noise_layers.motion_blur import MotionBlur
 from noise_layers.resize import Resize
 from noise_layers.quantization import Quantization
 from noise_layers.jpeg_compression import JpegCompression
@@ -43,6 +45,12 @@ def parse_resize(resize_command):
     min_ratio = float(ratios[0])
     max_ratio = float(ratios[1])
     return Resize((min_ratio, max_ratio))
+
+def parse_defocus(defocus_command):
+    return DefocusBlur()
+
+def parse_motion(motion_command):
+    return MotionBlur()
 
 
 class NoiseArgParser(argparse.Action):
@@ -95,6 +103,10 @@ class NoiseArgParser(argparse.Action):
                 layers.append(parse_dropout(command))
             elif command[:len('resize')] == 'resize':
                 layers.append(parse_resize(command))
+            elif command[:len('defocus')] == 'defocus':
+                layers.append(parse_defocus(command))
+            elif command[:len('motion')] == 'motion':
+                layers.append(parse_motion(command))
             elif command[:len('jpeg')] == 'jpeg':
                 layers.append('JpegPlaceholder')
             elif command[:len('quant')] == 'quant':

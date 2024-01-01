@@ -21,7 +21,7 @@ input_image = transform(original_image).unsqueeze(0)
 
 # 创建模型和噪声层
 # your_network = YourNetwork()
-defocus_blur = DefocusBlur()
+defocus_blur = DefocusBlur(kernel_size=10)
 motion_blur = MotionBlur()
 gaussian_blur = GaussianBlur(kernel_size=15, sigma=3)
 
