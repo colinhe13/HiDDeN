@@ -46,7 +46,7 @@ def train(model: Hidden,
     # 设置保存图片的大小
     saved_images_size = (512, 512)
 
-    # 开始训练，共循环迭代number_of_epochs - start_epoch次
+    # 开始训练，共循环迭代 number_of_epochs - start_epoch 次
     for epoch in range(train_options.start_epoch, train_options.number_of_epochs + 1):
         # 打印开始信息
         logging.info('\nStarting epoch {}/{}'.format(epoch, train_options.number_of_epochs))
@@ -58,9 +58,9 @@ def train(model: Hidden,
         epoch_start = time.time()
         step = 1
         for image, _ in train_data:
-            # 将图片移到计算设备上
+            # 将图片列表移到计算设备上
             image = image.to(device)
-            # 随机生成与图像大小相同的消息，移到计算设备上
+            # 随机生成给定长度的消息，移到计算设备上
             message = torch.Tensor(np.random.choice([0, 1], (image.shape[0], hidden_config.message_length))).to(device)
             # 在当前批次上进行训练，获取损失
             losses, _ = model.train_on_batch([image, message])
@@ -98,7 +98,7 @@ def train(model: Hidden,
         for image, _ in val_data:
             # 将图片移到计算设备上
             image = image.to(device)
-            # 随机生成与图像大小相同的消息，移到计算设备上
+            # 随机生成给定长度的消息，移到计算设备上
             message = torch.Tensor(np.random.choice([0, 1], (image.shape[0], hidden_config.message_length))).to(device)
             # 在当前批次上进行验证，获取损失
             losses, (encoded_images, noised_images, decoded_messages) = model.validate_on_batch([image, message])

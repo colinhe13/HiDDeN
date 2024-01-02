@@ -23,7 +23,8 @@ class Discriminator(nn.Module):
 
         # 定义卷积层
         # 首先添加一个输入通道数为3，输出通道数为64
-        layers = [ConvBNRelu(3, config.discriminator_channels)]
+        # layers = [ConvBNRelu(3, config.discriminator_channels)]
+        layers = [ConvBNRelu(1, config.discriminator_channels)]
         # 然后添加2个卷积层,每个卷积层的输入通道数和输出通道数都是64
         for _ in range(config.discriminator_blocks-1):
             layers.append(ConvBNRelu(config.discriminator_channels, config.discriminator_channels))

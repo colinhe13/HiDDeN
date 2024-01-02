@@ -29,10 +29,12 @@ class DefocusBlur(nn.Module):
         blur_size = torch.randint(self.blur_range[0], self.blur_range[1] + 1, (1,)).item()
 
         # Create a depth channel (1 channel) convolution kernel
-        kernel = torch.ones((3, 1, blur_size, blur_size), dtype=torch.float32) / (blur_size ** 2)
+        # kernel = torch.ones((3, 1, blur_size, blur_size), dtype=torch.float32) / (blur_size ** 2)
+        kernel = torch.ones((1, 1, blur_size, blur_size), dtype=torch.float32) / (blur_size ** 2)
 
         # Apply convolution to each channel
-        blurred_image = F.conv2d(noised_and_cover[0], kernel, padding=0, groups=3)
+        # blurred_image = F.conv2d(noised_and_cover[0], kernel, padding=0, groups=3)
+        blurred_image = F.conv2d(noised_and_cover[0], kernel, padding=0, groups=1)
 
         noised_and_cover[0] = blurred_image
 

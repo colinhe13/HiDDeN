@@ -21,7 +21,8 @@ class Encoder(nn.Module):
         self.num_blocks = config.encoder_blocks
 
         # 创建卷积层列表，首先添加一个输入通道数为3，输出通道数为64的卷积层
-        layers = [ConvBNRelu(3, self.conv_channels)]
+        # layers = [ConvBNRelu(3, self.conv_channels)]
+        layers = [ConvBNRelu(1, self.conv_channels)]
 
         # 添加卷积层，每个卷积层的输入通道数和输出通道数都是64
         for _ in range(config.encoder_blocks-1):
@@ -31,11 +32,14 @@ class Encoder(nn.Module):
         # 将所有的卷积层组合成一个序列
         self.conv_layers = nn.Sequential(*layers)
         # 添加一个卷积层，用于拼接输入的图片和水印
-        self.after_concat_layer = ConvBNRelu(self.conv_channels + 3 + config.message_length,
+        # self.after_concat_layer = ConvBNRelu(self.conv_channels + 3 + config.message_length,
+        #                                      self.conv_channels)
+        self.after_concat_layer = ConvBNRelu(self.conv_channels + 1 + config.message_length,
                                              self.conv_channels)
 
         # 添加一个卷积层，输入通道数为64，输出通道数为3，用于将这些特征转换为一个RGB图片
-        self.final_layer = nn.Conv2d(self.conv_channels, 3, kernel_size=1)
+        # self.final_layer = nn.Conv2d(self.conv_channels, 3, kernel_size=1)
+        self.final_layer = nn.Conv2d(self.conv_channels, 1, kernel_size=1)
 
     def forward(self, image, message):
 

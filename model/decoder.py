@@ -14,7 +14,8 @@ class Decoder(nn.Module):
         super(Decoder, self).__init__()
         self.channels = config.decoder_channels
 
-        layers = [ConvBNRelu(3, self.channels)]
+        # layers = [ConvBNRelu(3, self.channels)]
+        layers = [ConvBNRelu(1, self.channels)]
         for _ in range(config.decoder_blocks - 1):
             layers.append(ConvBNRelu(self.channels, self.channels))
 

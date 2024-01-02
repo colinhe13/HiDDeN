@@ -48,7 +48,8 @@ class MotionBlur(nn.Module):
         kernel = self._motion_blur_kernel(blur_size, blur_angle)
 
         # Apply convolution to each channel
-        blurred_image = F.conv2d(noised_and_cover[0], kernel, padding=0, groups=3)
+        # blurred_image = F.conv2d(noised_and_cover[0], kernel, padding=0, groups=3)
+        blurred_image = F.conv2d(noised_and_cover[0], kernel, padding=0, groups=1)
 
         noised_and_cover[0] = blurred_image
 
@@ -77,6 +78,6 @@ class MotionBlur(nn.Module):
         kernel /= kernel.sum()
 
         # Expand to 3 channels
-        kernel = kernel.expand(3, 1, -1, -1)
+        # kernel = kernel.expand(3, 1, -1, -1)
 
         return kernel
