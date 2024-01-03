@@ -175,45 +175,44 @@ def main():
 
 
 if __name__ == '__main__':
-    # main()
+    main()
 
 
-    device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-    hidden_config = HiDDenConfiguration(H=16, W=16,
-                                        # message_length=52428,
-                                        message_length=20,
-                                        encoder_blocks=4, encoder_channels=64,
-                                        decoder_blocks=7, decoder_channels=64,
-                                        use_discriminator=True,
-                                        use_vgg=False,
-                                        discriminator_blocks=3, discriminator_channels=64,
-                                        decoder_loss=1,
-                                        encoder_loss=0.7,
-                                        adversarial_loss=1e-3,
-                                        enable_fp16=False
-                                        )
-    noiser = Noiser([DefocusBlur(), MotionBlur()], device)
-    tb_logger = None
-    model = Hidden(hidden_config, device, noiser, tb_logger)
-    train_options = TrainingOptions(
-        # batch_size=12,
-        batch_size=2,
-        number_of_epochs=100,
-        # train_folder=os.path.join('data', 'boss_h', 'data_size512', '500_50', 'train'),
-        # validation_folder=os.path.join('data', 'boss_h', 'data_size512', '500_50', 'val'),
-        train_folder=os.path.join('data', 'boss_h', 'data_size512_pgm', '5_1', 'train'),
-        validation_folder=os.path.join('data', 'boss_h', 'data_size512_pgm', '5_1', 'val'),
-        runs_folder=os.path.join('.', 'runs'),
-        start_epoch=1,
-        experiment_name='no-noise-size512-500'
-    )
-    this_run_folder = utils.create_folder_for_run(train_options.runs_folder, train_options.experiment_name)
-    with open(os.path.join(this_run_folder, 'options-and-config.pickle'), 'wb+') as f:
-        pickle.dump(train_options, f)
-        pickle.dump(hidden_config, f)
-    train(model, device, hidden_config, train_options, this_run_folder, tb_logger)
+    # device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+    # hidden_config = HiDDenConfiguration(H=512, W=512,
+    #                                     # message_length=52428,
+    #                                     message_length=2428,
+    #                                     encoder_blocks=4, encoder_channels=64,
+    #                                     decoder_blocks=7, decoder_channels=64,
+    #                                     use_discriminator=True,
+    #                                     use_vgg=False,
+    #                                     discriminator_blocks=3, discriminator_channels=64,
+    #                                     decoder_loss=1,
+    #                                     encoder_loss=0.7,
+    #                                     adversarial_loss=1e-3,
+    #                                     enable_fp16=False
+    #                                     )
+    # noiser = Noiser([], device)
+    # tb_logger = None
+    # model = Hidden(hidden_config, device, noiser, tb_logger)
+    # train_options = TrainingOptions(
+    #     # batch_size=12,
+    #     batch_size=2,
+    #     number_of_epochs=100,
+    #     train_folder=os.path.join('data', 'boss_h', 'data_size512', '500_50', 'train'),
+    #     validation_folder=os.path.join('data', 'boss_h', 'data_size512', '500_50', 'val'),
+    #     runs_folder=os.path.join('.', 'runs'),
+    #     start_epoch=1,
+    #     experiment_name='no-noise-size512-500'
+    # )
+    # this_run_folder = utils.create_folder_for_run(train_options.runs_folder, train_options.experiment_name)
+    # train(model, device, hidden_config, train_options, this_run_folder, tb_logger)
 
 
 """
 python main.py new --name no-noise-size512-500 --data-dir data/boss_h/data_size512/500_50 --epochs 100 --size 512 --message 52428 --batch-size 12 
+python main.py new --name no-noise-size16-5000 --data-dir data/boss_h/data_size512_pgm/5000_500 --epochs 200 --size 16 --message 50 --batch-size 12
+python main.py new --name no-noise-size128-5000 --data-dir data/boss_h/data_size512_pgm/5000_500 --epochs 300 --size 128 --message 30 --batch-size 12 --noise 'motion+defocus'; shutdown
+python main.py new --name motion-defocus-size128-5000 --data-dir data/boss_h/data_size512_pgm/5000_500 --epochs 300 --size 128 --message 30 --batch-size 12 --noise 'motion+defocus'; shutdown
+
 """

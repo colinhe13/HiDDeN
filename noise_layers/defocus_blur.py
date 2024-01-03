@@ -23,6 +23,9 @@ class DefocusBlur(nn.Module):
     def __init__(self, blur_range=(5, 10)):
         super(DefocusBlur, self).__init__()
         self.blur_range = blur_range
+        # 将网络层改为在init处定义
+        # self.conv = nn.Conv2d(3, 3, 3, 1, 1, bias=False)
+
 
     def forward(self, noised_and_cover):
         # Generate a random blur size
@@ -31,7 +34,8 @@ class DefocusBlur(nn.Module):
         # Create a depth channel (1 channel) convolution kernel
         # kernel = torch.ones((3, 1, blur_size, blur_size), dtype=torch.float32) / (blur_size ** 2)
         kernel = torch.ones((1, 1, blur_size, blur_size), dtype=torch.float32) / (blur_size ** 2)
-
+        # 将kernel转换为torch.cuda.FloatTensor格式
+        kernel = kernel.cuda()
         # Apply convolution to each channel
         # blurred_image = F.conv2d(noised_and_cover[0], kernel, padding=0, groups=3)
         blurred_image = F.conv2d(noised_and_cover[0], kernel, padding=0, groups=1)

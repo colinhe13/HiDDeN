@@ -17,7 +17,7 @@ def load_pgm_to_tensor(file_path):
     return tensor_image
 
 # 示例用法：
-pgm_file_path = "boss_h/data_size512_pgm/1_14_17_5.pgm"
+pgm_file_path = "boss_h/data_size512_pgm/5000_500/train/train_class/1.pgm"
 tensor_image = load_pgm_to_tensor(pgm_file_path)
 print(tensor_image.shape)
 print(tensor_image)
