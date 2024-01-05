@@ -1,6 +1,9 @@
 import torch.nn as nn
+
+import utils
 from model.encoder import Encoder
 from model.decoder import Decoder
+from noise_layers.halftone import Halftone
 from options import HiDDenConfiguration
 from noise_layers.noiser import Noiser
 
@@ -17,13 +20,20 @@ class EncoderDecoder(nn.Module):
 
         super(EncoderDecoder, self).__init__()
         self.encoder = Encoder(config)
+        self.halftone = Halftone()
         self.noiser = noiser
 
         self.decoder = Decoder(config)
 
     def forward(self, image, message):
+        # 编码图像
         encoded_image = self.encoder(image, message)
-        noised_and_cover = self.noiser([encoded_image, image])
+        # 对编码图像进行加网，生成半色调图像
+        halftoned_image = self.halftone(encoded_image)
+        # 生成噪声图像
+        # noised_and_cover = self.noiser([encoded_image, image])
+        noised_and_cover = self.noiser([halftoned_image, image])
         noised_image = noised_and_cover[0]
+        # 解码消息
         decoded_message = self.decoder(noised_image)
         return encoded_image, noised_image, decoded_message

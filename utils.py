@@ -26,6 +26,7 @@ def image_to_tensor(image):
     """
     image_tensor = torch.Tensor(image)
     image_tensor.unsqueeze_(0)
+    # image_tensor = image_tensor.permute(0, 3, 1, 2)
     image_tensor = image_tensor.permute(0, 3, 1, 2)
     image_tensor = image_tensor / 127.5 - 1
     return image_tensor
@@ -37,7 +38,8 @@ def tensor_to_image(tensor):
     :param tensor: (batch_size x channels x height x width) torch tensor in range [-1.0, 1.0]
     :return: (batch_size x height x width x channels) uint8 array
     """
-    image = tensor.permute(0, 2, 3, 1).cpu().numpy()
+    # image = tensor.permute(0, 2, 3, 1).cpu().numpy()
+    image = tensor.permute(0, 2, 3, 1).cpu().detach().numpy()
     image = (image + 1) * 127.5
     return np.clip(image, 0, 255).astype(np.uint8)
 

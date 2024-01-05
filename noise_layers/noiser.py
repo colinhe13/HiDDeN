@@ -3,6 +3,7 @@ import torch.nn as nn
 from noise_layers.identity import Identity
 from noise_layers.jpeg_compression import JpegCompression
 from noise_layers.quantization import Quantization
+from noise_layers.screen import ThresholdNoise
 
 
 class Noiser(nn.Module):
@@ -14,6 +15,8 @@ class Noiser(nn.Module):
         super(Noiser, self).__init__()
         # 初始化噪声层列表，包含一个Identity空噪声层
         self.noise_layers = [Identity()]
+        # 初始化噪声层列表，添加半色调噪声层
+        # self.noise_layers = [ThresholdNoise(threshold_matrix_path="data/screen_matrx_512.npy")]
         # 遍历噪声层列表，根据字符串选择噪声层
         for layer in noise_layers:
             # 如果是字符串

@@ -9,6 +9,7 @@ from noise_layers.motion_blur import MotionBlur
 from noise_layers.resize import Resize
 from noise_layers.quantization import Quantization
 from noise_layers.jpeg_compression import JpegCompression
+from noise_layers.screen import ThresholdNoise
 
 
 def parse_pair(match_groups):
@@ -52,6 +53,8 @@ def parse_defocus(defocus_command):
 def parse_motion(motion_command):
     return MotionBlur()
 
+def parse_threshold(threshold_command):
+    return ThresholdNoise("noise_layers/test_data/screen_512.npy")
 
 class NoiseArgParser(argparse.Action):
     def __init__(self,
@@ -107,6 +110,8 @@ class NoiseArgParser(argparse.Action):
                 layers.append(parse_defocus(command))
             elif command[:len('motion')] == 'motion':
                 layers.append(parse_motion(command))
+            elif command[:len('threshold')] == 'threshold':
+                layers.append(parse_threshold(command))
             elif command[:len('jpeg')] == 'jpeg':
                 layers.append('JpegPlaceholder')
             elif command[:len('quant')] == 'quant':

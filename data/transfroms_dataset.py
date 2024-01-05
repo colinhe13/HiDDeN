@@ -17,7 +17,15 @@ def load_pgm_to_tensor(file_path):
     return tensor_image
 
 # 示例用法：
-pgm_file_path = "boss_h/data_size512_pgm/1_14_17_5.pgm"
-tensor_image = load_pgm_to_tensor(pgm_file_path)
-print(tensor_image.shape)
-print(tensor_image)
+pgm_file_path = "boss_h/data_size512/500_50/train/train_class/train_image1.jpg"
+img = Image.open(pgm_file_path)
+img1 = img.convert('1')
+# img.show()
+# img1.show()
+print(img)
+print(img1)
+
+
+# tensor_image = load_pgm_to_tensor(pgm_file_path)
+# print(tensor_image.shape)
+# print(tensor_image)
