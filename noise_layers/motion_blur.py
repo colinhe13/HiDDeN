@@ -46,7 +46,7 @@ class MotionBlur(nn.Module):
 
         # Create a motion blur kernel
         kernel = self._motion_blur_kernel(blur_size, blur_angle)
-
+        kernel = kernel.cuda()
         # Apply convolution to each channel
         # blurred_image = F.conv2d(noised_and_cover[0], kernel, padding=0, groups=3)
         blurred_image = F.conv2d(noised_and_cover[0], kernel, padding=0, groups=1)

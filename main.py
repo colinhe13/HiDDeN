@@ -221,4 +221,8 @@ if __name__ == '__main__':
 
 """
 python main.py new --name no-noise-size512-500 --data-dir data/boss_h/data_size512/500_50 --epochs 100 --size 512 --message 52428 --batch-size 12 
+python main.py new --name no-noise-size16-5000 --data-dir data/boss_h/data_size512_pgm/5000_500 --epochs 200 --size 16 --message 50 --batch-size 12
+python main.py new --name no-noise-size128-5000 --data-dir data/boss_h/data_size512_pgm/5000_500 --epochs 300 --size 128 --message 30 --batch-size 12 --noise 'motion+defocus'; shutdown
+python main.py new --name motion-defocus-size128-5000 --data-dir data/boss_h/data_size512_pgm/5000_500 --epochs 300 --size 128 --message 30 --batch-size 12 --noise 'motion+defocus'; shutdown
+
 """
